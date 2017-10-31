@@ -1,0 +1,22 @@
+version: "2"
+services:
+  books_api_db:
+    image: "sameersbn/postgresql:9.6-2"
+    container_name: books_api_db
+    hostname: books_api_db
+    restart: always
+    env_file: ".env"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/9.6/main
+    ports:
+      - "5432:5432"
+  books_api:
+    build: .
+    container_name: books_api
+    ports:
+     - "1337:1337"
+    volumes:
+     - ./uploads:/books_api/uploads
+     - ./src:/books_api/src
+     - ./index.js:/books_api/index.js
+    env_file: ".env"

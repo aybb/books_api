@@ -1,0 +1,229 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+schemes:
+- "http"
+paths:
+
+  /users/register:
+    post:
+      tags:
+        - "users"
+      description: "Register new user"
+      parameters:
+        - name: "request body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+                required: true
+              password:
+                type: "string"
+                required: true
+      responses:
+        204:
+          description: "Created"
+        500:
+          description: "Error"
+  /users/login:
+    post:
+      tags:
+        - "users"
+      description: "Login as user"
+      parameters:
+        - name: "request body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+                required: true
+              password:
+                type: "string"
+                required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              access_token:
+                type: "string"
+              user_id:
+                type: "integer"
+        500:
+          description: "Error"
+
+  /books/create:
+    post:
+      tags:
+        - "books"
+      summary: "Create new book"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+        - name: "request data"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              title:
+                type: "string"
+                required: true
+              description:
+                type: "string"
+                required: true
+              release_date:
+                type: "string"
+                required: true
+              cover_image:
+                type: "string"
+                description: "image as base64 string"
+      responses:
+        204:
+          description: "Created"
+          schema:
+            $ref: '#/definitions/Book'
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Error"
+  /books/update/{bookId}:
+    put:
+      summary: "Update book"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          type: "string"
+          required: true
+        - name: "bookId"
+          in: "path"
+          type: "integer"
+          required: true
+        - name: "request data"
+          in: "body"
+          schema:
+            type: "object"
+            properties:
+              title:
+                type: "string"
+                required: true
+              description:
+                type: "string"
+                required: true
+              release_date:
+                type: "string"
+                required: true
+              cover_image:
+                type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Book'
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Error"
+  /books/delete/{bookId}:
+    delete:
+      summary: "Delete book"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          type: "string"
+          required: true
+        - name: "bookId"
+          in: "path"
+          type: "integer"
+          required: true
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Error"
+  /books/{bookId}:
+    get:
+      summary: "Get book details"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          type: "string"
+          required: true
+        - name: "bookId"
+          in: "path"
+          type: "integer"
+          required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Book'
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Error"
+  /books:
+    get:
+      summary: "Search all books"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          type: "string"
+          required: true
+        - name: "q"
+          in: "query"
+          type: "string"
+        - name: "page"
+          in: "query"
+          type: "integer"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              count:
+                type: "integer"
+              rows:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    user_id:
+                      type: "integer"
+                    title:
+                      type: "string"
+        401:
+          description: "Unauthorized"
+
+definitions:
+  Book:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      user_id:
+        type: "integer"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      release_date:
+        type: "string"
+      cover_image:
+        type: "string"
+      created_at:
+        type: "string"
+      updated_at:
+        type: "string"
+
